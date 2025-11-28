@@ -417,6 +417,16 @@
             margin-bottom: 15px;
         }
 
+        /* Imagem da notícia */
+        .noticia-imagem {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
         .noticia-footer {
             display: flex;
             justify-content: space-between;
@@ -434,7 +444,7 @@
             color: white;
         }
 
-        .tag.cultural {
+        .tag.evento {
             background-color: #e74c3c;
         }
 
@@ -452,6 +462,10 @@
 
         .tag.academico {
             background-color: #9b59b6;
+        }
+
+        .tag.tecnologia {
+            background-color: #1abc9c;
         }
 
         .leia-mais {
@@ -531,9 +545,18 @@
         .modal-body p {
             margin-bottom: 15px;
         }
+
+        .modal-imagem {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
         
         /* Para o modal (se preferir adicionar ao CSS principal) */
-        .modal-tag.cultural {
+        .modal-tag.evento {
             background-color: #e74c3c;
         }
 
@@ -551,6 +574,10 @@
 
         .modal-tag.academico {
             background-color: #9b59b6;
+        }
+
+        .modal-tag.tecnologia {
+            background-color: #1abc9c;
         }
         
         /* Para notícias filtradas */
@@ -721,6 +748,12 @@
             .footer-left, .footer-right {
                 margin-bottom: 20px;
             }
+
+            .modal-content {
+                width: 90%;
+                padding: 20px;
+                margin: 10% auto;
+            }
         }
 
         @media (max-width: 480px) {
@@ -744,6 +777,15 @@
             
             .noticia h2 {
                 font-size: 1.2rem;
+            }
+
+            .filtros {
+                gap: 5px;
+            }
+            
+            .filtro-btn {
+                padding: 6px 12px;
+                font-size: 12px;
             }
         }
     </style>
@@ -864,7 +906,8 @@
     <div class="filtros-container">
         <div class="filtros">
             <button class="filtro-btn active" data-filter="todos">Todos</button>
-            <button class="filtro-btn" data-filter="cultural">Cultural</button>
+            <button class="filtro-btn" data-filter="evento">Eventos</button>
+            <button class="filtro-btn" data-filter="tecnologia">Tecnologia</button>
             <button class="filtro-btn" data-filter="entrevista">Entrevista</button>
             <button class="filtro-btn" data-filter="artigo">Artigo</button>
             <button class="filtro-btn" data-filter="esportes">Esportes</button>
@@ -874,63 +917,69 @@
 
     <div class="container">
         <div class="todas-container restricted-content" id="mainContent">
-            <div class="noticia slide-in-left" data-category="cultural">
+            <!-- Notícia 1 - Evento FOPTEC -->
+            <div class="noticia slide-in-left" data-category="evento tecnologia">
                 <div class="noticia-header">
-                    <h2>Evento Cultural movimenta o centro da cidade</h2>
-                    <span class="data">Publicado em 18 de agosto de 2025</span>
+                    <h2>Evento FOPTEC: Oficina de Robótica Educacional no Laboratório de Robótica</h2>
+                    <span class="data">Publicado em 28 de Novembro de 2025</span>
                 </div>
-                <p>Centenas de pessoas participaram do evento cultural realizado neste fim de semana, com apresentações musicais, oficinas de arte e gastronomia local.</p>
+                <!-- Espaço para imagem - você pode adicionar a imagem aqui -->
+                <img src="imgs/foptec.jpg" alt="Evento FOPTEC - Oficina de Robótica" class="noticia-imagem">
+                <p>O Cetep está organizando o evento FOPTEC com uma oficina especial de robótica educacional que acontecerá no nosso moderno laboratório de robótica. O evento contará com diversos stands interativos onde os visitantes poderão conhecer projetos inovadores desenvolvidos por nossos alunos.</p>
+                <p>Destaque especial para o stand do School Assistant, onde apresentaremos todas as funcionalidades do nosso sistema de gestão escolar. Venha conhecer como a tecnologia está transformando a educação em nossa instituição!</p>
                 <div class="noticia-footer">
-                    <span class="tag cultural">Cultural</span>
+                    <span class="tag evento">Evento</span>
+                    <span class="tag tecnologia">Tecnologia</span>
                     <span class="leia-mais" data-id="1">Leia mais →</span>
                 </div>
             </div>
 
             <div class="noticia slide-in-right" data-category="entrevista">
                 <div class="noticia-header">
-                    <h2>Entrevista com a diretora do projeto social Luz do Saber</h2>
-                    <span class="data">Publicado em 16 de agosto de 2025</span>
+                    <h2>Entrevista com a Coordenadora Pedagógica</h2>
+                    <span class="data">Publicado em 20 de março de 2025</span>
                 </div>
-                <p>A diretora fala sobre os desafios da educação comunitária e os planos de expansão do projeto para outras regiões da cidade.</p>
+                <p>Conversamos com a professora Maria Santos sobre os novos métodos de ensino implementados este ano e os resultados já observados no desempenho dos alunos.</p>
                 <div class="noticia-footer">
                     <span class="tag entrevista">Entrevista</span>
                     <span class="leia-mais" data-id="2">Leia mais →</span>
                 </div>
             </div>
 
-            <div class="noticia slide-in-left" data-category="artigo">
+            <div class="noticia slide-in-left" data-category="artigo academico">
                 <div class="noticia-header">
-                    <h2>Artigo: A importância do jornal comunitário</h2>
-                    <span class="data">Publicado em 12 de agosto de 2025</span>
+                    <h2>Projeto de Sustentabilidade: Horta Escolar</h2>
+                    <span class="data">Publicado em 15 de março de 2025</span>
                 </div>
-                <p>Os jornais locais têm papel fundamental na construção de uma sociedade bem informada, próxima e participativa. Leia a opinião do colunista João Silva.</p>
+                <p>Alunos do curso de Meio Ambiente desenvolvem projeto de horta sustentável com técnicas de compostagem e irrigação inteligente.</p>
                 <div class="noticia-footer">
                     <span class="tag artigo">Artigo</span>
+                    <span class="tag academico">Acadêmico</span>
                     <span class="leia-mais" data-id="3">Leia mais →</span>
                 </div>
             </div>
             
-            <!-- Novas notícias com mais categorias -->
             <div class="noticia slide-in-right" data-category="esportes">
                 <div class="noticia-header">
-                    <h2>Time de futebol da escola vence campeonato regional</h2>
-                    <span class="data">Publicado em 10 de agosto de 2025</span>
+                    <h2>Time de Vôlei Feminino Classificado para Regional</h2>
+                    <span class="data">Publicado em 10 de março de 2025</span>
                 </div>
-                <p>O time de futebol do Cetep conquistou o primeiro lugar no campeonato regional após uma emocionante final.</p>
+                <p>Nossa equipe feminina de vôlei garantiu vaga no campeonato regional após vitória histórica na fase municipal.</p>
                 <div class="noticia-footer">
                     <span class="tag esportes">Esportes</span>
                     <span class="leia-mais" data-id="4">Leia mais →</span>
                 </div>
             </div>
             
-            <div class="noticia slide-in-left" data-category="academico">
+            <div class="noticia slide-in-left" data-category="academico tecnologia">
                 <div class="noticia-header">
-                    <h2>Alunos desenvolvem projeto de sustentabilidade</h2>
-                    <span class="data">Publicado em 8 de agosto de 2025</span>
+                    <h2>Feira de Ciências: Projetos Inovadores</h2>
+                    <span class="data">Publicado em 5 de março de 2025</span>
                 </div>
-                <p>Estudantes do curso técnico em meio ambiente criam sistema de compostagem para reduzir resíduos na escola.</p>
+                <p>Estudantes apresentam soluções tecnológicas para problemas do cotidiano na tradicional Feira de Ciências do Cetep.</p>
                 <div class="noticia-footer">
                     <span class="tag academico">Acadêmico</span>
+                    <span class="tag tecnologia">Tecnologia</span>
                     <span class="leia-mais" data-id="5">Leia mais →</span>
                 </div>
             </div>
@@ -1195,7 +1244,8 @@
                     const filtro = this.getAttribute('data-filter');
                     
                     noticiasList.forEach(noticia => {
-                        if (filtro === 'todos' || noticia.getAttribute('data-category') === filtro) {
+                        const categories = noticia.getAttribute('data-category').split(' ');
+                        if (filtro === 'todos' || categories.includes(filtro)) {
                             noticia.classList.remove('hidden');
                             // Anima a entrada da notícia
                             noticia.style.opacity = '0';
@@ -1219,34 +1269,39 @@
             // Conteúdo completo das notícias
             const noticiasCompletas = {
                 1: {
-                    titulo: "Evento Cultural movimenta o centro da cidade",
-                    data: "Publicado em 18 de agosto de 2025",
-                    categoria: "cultural",
+                    titulo: "Evento FOPTEC: Oficina de Robótica Educacional no Laboratório de Robótica",
+                    data: "Publicado em 28 de novembro de 2025",
+                    categoria: "evento",
                     conteudo: `
-                        <p>Centenas de pessoas participaram do evento cultural realizado neste fim de semana, com apresentações musicais, oficinas de arte e gastronomia local.</p>
-                        <p>O evento, organizado pela escola em parceria com a prefeitura, transformou o centro da cidade em um grande palco de manifestações artísticas. Foram mais de 20 apresentações musicais, com destaque para a banda formada por alunos do Cetep.</p>
-                        <p>As oficinas de arte atraíram crianças e adultos interessados em aprender técnicas de pintura, escultura e artesanato. A gastronomia local também teve espaço especial, com food trucks e barracas oferecendo pratos típicos da região.</p>
-                        <p>Segundo a diretora da escola, Maria Silva, "o objetivo do evento é integrar a escola com a comunidade, mostrando o talento dos nossos alunos e promovendo a cultura local". A edição deste ano superou as expectativas de público e deve se tornar um evento anual.</p>
+                        <img src="imgs/foptec.jpg" alt="Evento FOPTEC - Oficina de Robótica" class="modal-imagem">
+                        <p>O Cetep está organizando o evento FOPTEC com uma oficina especial de robótica educacional que acontecerá no nosso moderno laboratório de robótica. O evento, que ocorrerá hoje dia 28 ás 09:00hrs, tem como objetivo promover o interesse pela tecnologia e inovação entre nossos alunos.</p>
+                        <p>Durante o evento, os visitantes poderão explorar diversos stands interativos onde nossos alunos apresentarão projetos inovadores desenvolvidos ao longo do semestre. Desde robôs autônomos até sistemas de automação residencial, a criatividade e o conhecimento técnico dos estudantes estarão em destaque.</p>
+                        <p>Um dos grandes destaques será o stand do <strong>School Assistant</strong>, onde apresentaremos todas as funcionalidades do nosso sistema de gestão escolar. Os visitantes poderão conhecer em primeira mão como a plataforma facilita a organização acadêmica, o acompanhamento de horários, agendamento de espaços e muito mais.</p>
+                        <p>Segundo Nickolas, "O School Assistant vai ser uma das melhores ferramentas de assistencia de escola que o CETEP vai ter".</p>
+                        <p><strong>Data:</strong> 28 de novembro de 2025<br>
+                        <strong>Local:</strong> Laboratório de Robótica - Cetep<br>
+                        <strong>Horário:</strong> 9h às 11h<br>
+                        <strong>Entrada:</strong> Gratuita</p>
                     `
                 },
                 2: {
-                    titulo: "Entrevista com a diretora do projeto social Luz do Saber",
-                    data: "Publicado em 16 de agosto de 2025",
+                    titulo: "Entrevista com a Coordenadora Pedagógica",
+                    data: "Publicado em 20 de março de 2025",
                     categoria: "entrevista",
                     conteudo: `
-                        <p>A diretora fala sobre os desafios da educação comunitária e os planos de expansão do projeto para outras regiões da cidade.</p>
-                        <p>Em entrevista exclusiva ao Cetep News, a diretora Ana Oliveira compartilhou sua visão sobre educação comunitária e os desafios enfrentados pelo projeto Luz do Saber.</p>
-                        <p>"Nosso maior desafio é garantir que todos tenham acesso à educação de qualidade, independentemente de sua condição social. O Luz do Saber nasceu com essa missão e, em cinco anos, já atendemos mais de 500 alunos", afirmou Ana.</p>
+                        <p>Conversamos com a professora Maria Santos sobre os novos métodos de ensino implementados este ano e os resultados já observados no desempenho dos alunos.</p>
+                        <p>Em entrevista exclusiva ao Cetep News, a coordenadora pedagógica Maria Santos compartilhou sua visão sobre educação e os desafios enfrentados na implementação de novos métodos de ensino.</p>
+                        <p>"Nosso maior desafio é garantir que todos tenham acesso à educação de qualidade, independentemente de sua condição social. O Cetep nasceu com essa missão e, em cinco anos, já atendemos mais de 500 alunos", afirmou Maria.</p>
                         <p>Entre os planos de expansão, está a abertura de duas novas unidades nos bairros Jardim das Flores e Vila Nova. "Queremos estar cada vez mais próximos da comunidade, oferecendo cursos profissionalizantes e reforço escolar", completou.</p>
-                        <p>O projeto conta com a parceria de voluntários e empresas locais, que contribuem com recursos e expertise. "Acreditamos que a educação transforma vidas e constrói uma sociedade mais justa", finalizou a diretora.</p>
+                        <p>O projeto conta com a parceria de voluntários e empresas locais, que contribuem com recursos e expertise. "Acreditamos que a educação transforma vidas e constrói uma sociedade mais justa", finalizou a coordenadora.</p>
                     `
                 },
                 3: {
-                    titulo: "Artigo: A importância do jornal comunitário",
-                    data: "Publicado em 12 de agosto de 2025",
+                    titulo: "Projeto de Sustentabilidade: Horta Escolar",
+                    data: "Publicado em 15 de março de 2025",
                     categoria: "artigo",
                     conteudo: `
-                        <p>Os jornais locais têm papel fundamental na construção de uma sociedade bem informada, próxima e participativa. Leia a opinião do colunista João Silva.</p>
+                        <p>Alunos do curso de Meio Ambiente desenvolvem projeto de horta sustentável com técnicas de compostagem e irrigação inteligente.</p>
                         <p>Em um mundo dominado por notícias globais e redes sociais, os jornais comunitários mantêm sua relevância como espaços de diálogo e construção de identidade local. Eles são os guardiões da memória coletiva, registrando os acontecimentos que moldam o dia a dia da comunidade.</p>
                         <p>O jornal comunitário vai além de informar; ele educa, forma opinião e fortalece os laços entre os moradores. É nele que encontramos as histórias de nossos vizinhos, os anúncios de eventos locais e as discussões sobre problemas que afetam diretamente nossa qualidade de vida.</p>
                         <p>No contexto escolar, o jornal comunitário assume um papel ainda mais importante. Ele é o elo entre a instituição de ensino e as famílias, divulgando projetos, conquistas e eventos. É também uma ferramenta pedagógica, permitindo que alunos desenvolvam habilidades de escrita, pesquisa e pensamento crítico.</p>
@@ -1254,11 +1309,11 @@
                     `
                 },
                 4: {
-                    titulo: "Time de futebol da escola vence campeonato regional",
-                    data: "Publicado em 10 de agosto de 2025",
+                    titulo: "Time de Vôlei Feminino Classificado para Regional",
+                    data: "Publicado em 10 de março de 2025",
                     categoria: "esportes",
                     conteudo: `
-                        <p>O time de futebol do Cetep conquistou o primeiro lugar no campeonato regional após uma emocionante final.</p>
+                        <p>Nossa equipe feminina de vôlei garantiu vaga no campeonato regional após vitória histórica na fase municipal.</p>
                         <p>Com um gol nos acréscimos, nossa equipe garantiu o título do campeonato regional de futebol escolar. A partida final, contra a tradicional escola Estadual Central, terminou com o placar de 2x1 para o Cetep.</p>
                         <p>O capitão do time, João Pedro, de 17 anos, marcou os dois gols da equipe. "É uma sensação indescritível. Treinamos muito durante todo o ano e ver todo esse esforço sendo recompensado é maravilhoso", comemorou o jovem atleta.</p>
                         <p>O professor de educação física, Carlos Mendes, destacou a dedicação dos alunos. "Eles mostraram que com disciplina e trabalho em equipe é possível alcançar grandes conquistas. Estou muito orgulhoso de todos", afirmou.</p>
@@ -1266,11 +1321,11 @@
                     `
                 },
                 5: {
-                    titulo: "Alunos desenvolvem projeto de sustentabilidade",
-                    data: "Publicado em 8 de agosto de 2025",
+                    titulo: "Feira de Ciências: Projetos Inovadores",
+                    data: "Publicado em 5 de março de 2025",
                     categoria: "academico",
                     conteudo: `
-                        <p>Estudantes do curso técnico em meio ambiente criam sistema de compostagem para reduzir resíduos na escola.</p>
+                        <p>Estudantes apresentam soluções tecnológicas para problemas do cotidiano na tradicional Feira de Ciências do Cetep.</p>
                         <p>Preocupados com a quantidade de resíduos orgânicos gerados na cantina da escola, um grupo de alunos do curso técnico em Meio Ambiente desenvolveu um sistema de compostagem que já está em funcionamento.</p>
                         <p>O projeto, orientado pela professora Sandra Lima, transforma restos de alimentos em adubo de alta qualidade, que é utilizado na horta escolar. "Além de reduzir significativamente o volume de lixo destinado ao aterro sanitário, estamos produzindo um composto orgânico excelente para nossas plantas", explica a professora.</p>
                         <p>Maria Eduarda, uma das alunas envolvidas no projeto, conta que a ideia surgiu durante uma aula sobre gestão de resíduos. "Percebemos que poderíamos fazer a diferença aqui mesmo na nossa escola. O projeto foi bem recebido por todos e já estamos colhendo os primeiros resultados", comemora.</p>
