@@ -1,0 +1,374 @@
+/* Reset e configurações básicas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+}
+
+/* Navbar */
+#navbar {
+    background: linear-gradient(90deg, #002f99, #0033A0);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    animation: slideDown 0.7s ease;
+}
+
+#Imagem {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    transition: transform 0.4s ease;
+}
+#Imagem:hover {
+    transform: rotate(10deg) scale(1.1);
+}
+
+#navbar h1 {
+    color: white;
+    margin-right: auto;
+    font-size: 24px;
+    font-weight: 700;
+    animation: fadeIn 1s ease;
+}
+
+#navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 15px;
+    transition: 0.3s ease;
+}
+#navbar a:hover {
+    color: red;
+    transform: scale(1.1);
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #0033A0 0%, #002080 100%);
+    color: white;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+/* Conteúdo principal */
+.container {
+    flex: 1;
+    padding: 20px 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Notícias */
+.noticia {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border-left: 4px solid #0033A0;
+    
+    /* Inicialmente escondidas para animação */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
+}
+
+.noticia:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.noticia-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.noticia h2 {
+    color: #0033A0;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    flex: 1;
+    margin-right: 15px;
+}
+
+.data {
+    color: #666;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.noticia p {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.noticia-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.tag.cultural {
+    background-color: #e74c3c;
+}
+
+.tag.entrevista {
+    background-color: #3498db;
+}
+
+.tag.artigo {
+    background-color: #2ecc71;
+}
+
+.leia-mais {
+    color: #0033A0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.leia-mais:hover {
+    color: #002080;
+    transform: translateX(5px);
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-out;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.8s ease-out forwards;
+}
+
+/* Estilos do rodapé */
+footer {
+    background-color: #002f99;
+    color: white;
+    padding: 30px 0 20px;
+    font-size: 14px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 40px;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.footer-left h3 {
+    margin-top: 0;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.footer-left p,
+.footer-right p {
+    margin: 5px 0;
+    opacity: 0.9;
+}
+
+.footer-right p strong {
+    display: inline-block;
+    width: 70px;
+}
+
+.footer-center-link {
+    text-align: center;
+    margin: 15px 0 10px 0;
+}
+
+.footer-center-link a {
+    color: white;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+.footer-center-link a:hover {
+    transition: 200ms ease-out;
+    text-decoration: underline;
+    color: #ffcc00;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #ffffff44;
+    font-size: 13px;
+    margin-top: 20px;
+    opacity: 0.8;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .noticia-header {
+        flex-direction: column;
+    }
+    
+    .noticia h2 {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .data {
+        align-self: flex-start;
+    }
+    
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-left, .footer-right {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    #navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    #navbar a {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    .noticia {
+        padding: 20px;
+    }
+    
+    .noticia h2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Adicione estas classes ao seu arquivo jornal.css */
+
+.tag.esportes {
+    background-color: #f39c12;
+}
+
+.tag.academico {
+    background-color: #9b59b6;
+}
+
+/* Para o modal (se preferir adicionar ao CSS principal) */
+.modal-tag.cultural {
+    background-color: #e74c3c;
+}
+
+.modal-tag.entrevista {
+    background-color: #3498db;
+}
+
+.modal-tag.artigo {
+    background-color: #2ecc71;
+}
+
+.modal-tag.esportes {
+    background-color: #f39c12;
+}
+
+.modal-tag.academico {
+    background-color: #9b59b6;
+}

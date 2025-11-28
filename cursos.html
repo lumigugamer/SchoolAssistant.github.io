@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School Assistant</title>
+  <style>
+    /* Reset e configurações básicas */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #ffffff 40%, #e6ecff 100%);
+    }
+
+    /* Layout principal */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    #navbar {
+        background: linear-gradient(90deg, #002f99, #0033A0);
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        animation: slideDown 0.7s ease;
+    }
+
+    #Imagem {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+        transition: transform 0.4s ease;
+    }
+    #Imagem:hover {
+        transform: rotate(10deg) scale(1.1);
+    }
+
+    #navbar h1 {
+        color: white;
+        margin-right: auto;
+        font-size: 24px;
+        font-weight: 700;
+        animation: fadeIn 1s ease;
+    }
+
+    /* Estilos para o sistema de autenticação */
+    .auth-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-left: auto;
+    }
+    
+    .auth-btn {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 14px;
+    }
+    
+    .btn-login {
+        background: transparent;
+        color: white;
+        border: 1px solid white;
+    }
+    
+    .btn-login:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-register {
+        background: white;
+        color: #0033A0;
+    }
+    
+    .btn-register:hover {
+        background: #f0f0f0;
+        transform: translateY(-2px);
+    }
+    
+    .nav-links {
+        display: none;
+        align-items: center;
+        gap: 20px;
+        margin-left: auto;
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+    
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        transition: 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+        color: red;
+        transform: scale(1.1);
+    }
+    
+    .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: 15px;
+        color: white;
+    }
+    
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    
+    .logout-btn {
+        background: transparent;
+        color: white;
+        border: 1px solid white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .logout-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Modal de login/registro */
+    .auth-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+        animation: fadeInModal 0.3s ease;
+    }
+    
+    .auth-content {
+        background: #fff;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        animation: popUp 0.5s ease;
+        overflow: hidden;
+    }
+    
+    .auth-tabs {
+        display: flex;
+        background: #f5f5f5;
+    }
+    
+    .auth-tab {
+        flex: 1;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .auth-tab.active {
+        background: white;
+        color: #0033A0;
+    }
+    
+    .auth-form {
+        padding: 25px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: border 0.3s ease;
+    }
+    
+    .form-group input:focus {
+        border-color: #0033A0;
+        outline: none;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background: #0033A0;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+        background: #002080;
+    }
+    
+    .auth-switch {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+    }
+    
+    .auth-switch a {
+        color: #0033A0;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    /* Mensagem de necessidade de login */
+    .login-required {
+        background: #fff9e6;
+        border-left: 4px solid #ffcc00;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 950px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        animation: fadeIn 1s ease;
+    }
+    
+    .login-required h3 {
+        color: #cc9900;
+        margin-top: 0;
+    }
+    
+    .login-required p {
+        margin-bottom: 15px;
+    }
+    
+    .features-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .feature-icon {
+        width: 24px;
+        height: 24px;
+        background: #0033A0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+    }
+    
+    /* Conteúdo restrito */
+    .restricted-content {
+        opacity: 0.6;
+        filter: blur(2px);
+        pointer-events: none;
+        transition: all 0.5s ease;
+    }
+    
+    .restricted-content.active {
+        opacity: 1;
+        filter: none;
+        pointer-events: all;
+    }
+
+    /* Container principal */
+    .container {
+      flex: 1;
+      padding: 30px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .container h1 {
+      color: #2c3e50;
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-align: center;
+      border-bottom: 2px solid #0033A0;
+      padding-bottom: 10px;
+    }
+
+    /* Estilos dos cursos */
+    .curso {
+      background-color: #ffffff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-left: 5px solid;
+    }
+
+    .curso:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .curso.informatica {
+      border-left-color: #ff0000;
+    }
+
+    .curso.seguranca {
+      border-left-color: #0000ff;
+    }
+
+    .curso.nutricao {
+      border-left-color: #87ceeb;
+    }
+
+    .curso.agropecuaria {
+      border-left-color: #006400;
+    }
+
+    .curso.edificacoes {
+      border-left-color: #32cd32; /* Verde claro para Edificações */
+    }
+
+    .curso h2 {
+      margin: 0;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Cores específicas para cada título de curso */
+    .curso.informatica h2 {
+      color: #ff0000; /* Vermelho para Informática */
+    }
+
+    .curso.seguranca h2 {
+      color: #0000ff; /* Azul para Segurança do Trabalho */
+    }
+
+    .curso.nutricao h2 {
+      color: #87ceeb; /* Azul claro para Nutrição */
+    }
+
+    .curso.agropecuaria h2 {
+      color: #006400; /* Verde escuro para Agropecuária */
+    }
+
+    .curso.edificacoes h2 {
+      color: #32cd32; /* Verde claro para Edificações */
+    }
+
+    .curso h2:after {
+      content: '+';
+      margin-left: auto;
+      font-size: 24px;
+      font-weight: normal;
+    }
+
+    .curso.active h2:after {
+      content: '-';
+    }
+
+    .curso h2:hover {
+      opacity: 0.8;
+    }
+
+    .curso-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, opacity 0.3s ease;
+      opacity: 0;
+      margin-top: 0;
+    }
+
+    .curso.active .curso-content {
+      max-height: 500px;
+      opacity: 1;
+      margin-top: 15px;
+    }
+
+    .curso-content p {
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+      padding: 10px 0;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #002f99;
+      color: #fff;
+      padding: 25px 20px;
+      text-align: center;
+      font-size: 14px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      #navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+      }
+
+      #navbar h1 {
+        margin-bottom: 10px;
+        margin-right: 0;
+      }
+
+      #navbar a {
+        margin: 5px 0;
+        margin-right: 15px;
+      }
+
+      .container {
+        padding: 20px 15px;
+      }
+
+      .container h1 {
+        font-size: 24px;
+      }
+
+      .curso h2 {
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #navbar a {
+        font-size: 13px;
+        margin-right: 10px;
+      }
+
+      .container h1 {
+        font-size: 22px;
+      }
+
+      .curso {
+        padding: 15px;
+      }
+
+      .curso h2 {
+        font-size: 16px;
+      }
+
+      .curso-content p {
+        font-size: 14px;
+      }
+
+      footer {
+        padding: 20px 15px;
+        font-size: 12px;
+      }
+    }
+
+    /* Animações */
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInModal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popUp {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar"> 
+    <img src="imgs/SO1.jpg" id="Imagem" alt="Logo">
+    <h1>School Assistant</h1>
+    
+    <!-- Container de autenticação -->
+    <div class="auth-container" id="authContainer">
+      <button class="auth-btn btn-login" id="btnLogin">Entrar</button>
+      <button class="auth-btn btn-register" id="btnRegister">Registrar</button>
+    </div>
+    
+    <!-- Links de navegação (aparecem após login) -->
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Inicial</a>
+      <a href="jornal.html">Jornal</a>
+      <a href="horarios.html">Horários</a>
+      <a href="agendamento.html">Agendamentos de Espaços</a>
+      <a href="cursos.html">Cursos</a>
+      <a href="professores.html">Professores</a>
+      
+      <!-- Menu do usuário -->
+      <div class="user-menu" id="userMenu">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <span id="userName">Usuário</span>
+        <button class="logout-btn" id="btnLogout">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Login/Registro -->
+  <div id="authModal" class="auth-modal">
+    <div class="auth-content">
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="loginTab">Entrar</div>
+        <div class="auth-tab" id="registerTab">Registrar</div>
+      </div>
+      
+      <div class="auth-form">
+        <!-- Formulário de Login -->
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">E-mail</label>
+            <input type="email" id="loginEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Senha</label>
+            <input type="password" id="loginPassword" required>
+          </div>
+          <button type="submit" class="submit-btn">Entrar</button>
+          <div class="auth-switch">
+            Não tem uma conta? <a id="switchToRegister">Registre-se</a>
+          </div>
+        </form>
+        
+        <!-- Formulário de Registro -->
+        <form id="registerForm" style="display: none;">
+          <div class="form-group">
+            <label for="registerName">Nome Completo</label>
+            <input type="text" id="registerName" required>
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">E-mail</label>
+            <input type="email" id="registerEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Senha</label>
+            <input type="password" id="registerPassword" required>
+          </div>
+          <div class="form-group">
+            <label for="registerConfirmPassword">Confirmar Senha</label>
+            <input type="password" id="registerConfirmPassword" required>
+          </div>
+          <button type="submit" class="submit-btn">Registrar</button>
+          <div class="auth-switch">
+            Já tem uma conta? <a id="switchToLogin">Faça login</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Mensagem de necessidade de login -->
+    <div class="login-required" id="loginRequired">
+      <h3>Faça login para acessar todos os recursos</h3>
+      <p>Para utilizar todas as funcionalidades do School Assistant, você precisa estar logado em sua conta.</p>
+      
+      <div class="features-list">
+        <div class="feature-item">
+          <div class="feature-icon">✓</div>
+          <span>Acesso ao Jornal escolar</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">✓</div>
+          <span>Consulta de horários</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">✓</div>
+          <span>Agendamento de espaços</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">✓</div>
+          <span>Informações sobre cursos</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">✓</div>
+          <span>Dados dos professores</span>
+        </div>
+      </div>
+      
+      <p><strong>Não tem uma conta?</strong> <a href="#" id="registerFromMessage">Registre-se gratuitamente</a> e comece a usar todas as funcionalidades!</p>
+    </div>
+
+    <h1>Cursos Disponíveis</h1>
+
+    <div class="todas-container restricted-content" id="mainContent">
+      <div class="curso informatica">
+        <h2 onclick="toggleCurso(this)">Informática</h2>
+        <div class="curso-content">
+          <p>O curso de Informática oferece conhecimentos básicos e avançados em softwares, sistemas operacionais, redes e manutenção de computadores. Ideal para quem deseja entrar no mercado de tecnologia ou melhorar habilidades digitais.</p>
+        </div>
+      </div>
+
+      <div class="curso seguranca">
+        <h2 onclick="toggleCurso(this)">Segurança do Trabalho</h2>
+        <div class="curso-content">
+          <p>Focado na prevenção de acidentes e doenças ocupacionais, o curso de Segurança do Trabalho forma profissionais capazes de identificar riscos e propor soluções para ambientes mais seguros e saudáveis.</p>
+        </div>
+      </div>
+
+      <div class="curso nutricao">
+        <h2 onclick="toggleCurso(this)">Nutrição</h2>
+        <div class="curso-content">
+          <p>O curso de Nutrição capacita profissionais para atuarem na promoção da saúde através da alimentação equilibrada, planejamento de dietas e orientação nutricional em diferentes contextos, como hospitais, escolas e empresas.</p>
+        </div>
+      </div>
+
+      <div class="curso agropecuaria">
+        <h2 onclick="toggleCurso(this)">Agropecuária</h2>
+        <div class="curso-content">
+          <p>Voltado ao setor agrícola e pecuário, esse curso ensina técnicas de manejo animal, cultivo de plantas, gestão rural e uso de tecnologias no campo, preparando o aluno para atuar no agronegócio com sustentabilidade.</p>
+        </div>
+      </div>
+
+      <!-- Novo curso de Edificações -->
+      <div class="curso edificacoes">
+        <h2 onclick="toggleCurso(this)">Edificações</h2>
+        <div class="curso-content">
+          <p>O curso de Edificações forma profissionais para atuar no planejamento, execução e gestão de obras civis. Os alunos aprendem sobre projetos arquitetônicos, estruturas, instalações prediais, topografia e gestão de obras, preparando-se para o mercado da construção civil com foco em qualidade e segurança.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-container">
+      School Assistant<br>
+      Organização e acessibilidade para a sua instituição de ensino.<br>
+      Contato: contato@schoolassistant.com<br>
+      Support: suporte@schoolassistant.com<br>
+      © 2025 School Assistant - Todos os direitos reservados.
+    </div>
+  </footer>
+
+  <script>
+    // Sistema de Autenticação
+    const authModal = document.getElementById("authModal");
+    const btnLogin = document.getElementById("btnLogin");
+    const btnRegister = document.getElementById("btnRegister");
+    const loginTab = document.getElementById("loginTab");
+    const registerTab = document.getElementById("registerTab");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const switchToRegister = document.getElementById("switchToRegister");
+    const switchToLogin = document.getElementById("switchToLogin");
+    const authContainer = document.getElementById("authContainer");
+    const navLinks = document.getElementById("navLinks");
+    const userMenu = document.getElementById("userMenu");
+    const userName = document.getElementById("userName");
+    const userAvatar = document.getElementById("userAvatar");
+    const btnLogout = document.getElementById("btnLogout");
+    const loginRequired = document.getElementById("loginRequired");
+    const mainContent = document.getElementById("mainContent");
+    const registerFromMessage = document.getElementById("registerFromMessage");
+
+    // Verificar se o usuário já está logado
+    function checkAuthStatus() {
+      const user = localStorage.getItem('currentUser');
+      if (user) {
+        const userData = JSON.parse(user);
+        showNavLinks(userData);
+        showMainContent();
+      } else {
+        showAuthButtons();
+        hideMainContent();
+      }
+    }
+
+    // Mostrar botões de autenticação
+    function showAuthButtons() {
+      authContainer.style.display = 'flex';
+      navLinks.style.display = 'none';
+    }
+
+    // Mostrar links de navegação e menu do usuário
+    function showNavLinks(userData) {
+      authContainer.style.display = 'none';
+      navLinks.style.display = 'flex';
+      userName.textContent = userData.name;
+      userAvatar.textContent = userData.name.charAt(0).toUpperCase();
+    }
+
+    // Mostrar conteúdo principal
+    function showMainContent() {
+      loginRequired.style.display = 'none';
+      mainContent.classList.add('active');
+    }
+
+    // Ocultar conteúdo principal
+    function hideMainContent() {
+      loginRequired.style.display = 'block';
+      mainContent.classList.remove('active');
+    }
+
+    // Abrir modal de autenticação
+    function openAuthModal(tab) {
+      authModal.style.display = 'flex';
+      if (tab === 'login') {
+        showLoginForm();
+      } else {
+        showRegisterForm();
+      }
+    }
+
+    // Mostrar formulário de login
+    function showLoginForm() {
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+      loginTab.classList.add('active');
+      registerTab.classList.remove('active');
+    }
+
+    // Mostrar formulário de registro
+    function showRegisterForm() {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'block';
+      loginTab.classList.remove('active');
+      registerTab.classList.add('active');
+    }
+
+    // Fechar modal de autenticação
+    function closeAuthModal() {
+      authModal.style.display = 'none';
+    }
+
+    // Processar login
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      // Verificar se o usuário existe
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(u => u.email === email && u.password === password);
+      
+      if (user) {
+        // Salvar usuário atual
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        showNavLinks(user);
+        showMainContent();
+        closeAuthModal();
+        loginForm.reset();
+      } else {
+        alert('E-mail ou senha incorretos!');
+      }
+    });
+
+    // Processar registro
+    registerForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerConfirmPassword').value;
+      
+      if (password !== confirmPassword) {
+        alert('As senhas não coincidem!');
+        return;
+      }
+      
+      // Verificar se o usuário já existe
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userExists = users.some(u => u.email === email);
+      
+      if (userExists) {
+        alert('Este e-mail já está cadastrado!');
+        return;
+      }
+      
+      // Criar novo usuário
+      const newUser = {
+        name: name,
+        email: email,
+        password: password
+      };
+      
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(newUser));
+      
+      showNavLinks(newUser);
+      showMainContent();
+      closeAuthModal();
+      registerForm.reset();
+      
+      alert('Conta criada com sucesso!');
+    });
+
+    // Fazer logout
+    btnLogout.addEventListener('click', function() {
+      localStorage.removeItem('currentUser');
+      showAuthButtons();
+      hideMainContent();
+    });
+
+    // Event Listeners
+    btnLogin.addEventListener('click', function() {
+      openAuthModal('login');
+    });
+    
+    btnRegister.addEventListener('click', function() {
+      openAuthModal('register');
+    });
+    
+    loginTab.addEventListener('click', function() {
+      showLoginForm();
+    });
+    
+    registerTab.addEventListener('click', function() {
+      showRegisterForm();
+    });
+    
+    switchToRegister.addEventListener('click', function(e) {
+      e.preventDefault();
+      showRegisterForm();
+    });
+    
+    switchToLogin.addEventListener('click', function(e) {
+      e.preventDefault();
+      showLoginForm();
+    });
+    
+    registerFromMessage.addEventListener('click', function(e) {
+      e.preventDefault();
+      openAuthModal('register');
+    });
+    
+    // Fechar modal ao clicar fora
+    window.addEventListener('click', function(event) {
+      if (event.target === authModal) {
+        closeAuthModal();
+      }
+    });
+
+    // Função para expandir/recolher cursos
+    function toggleCurso(element) {
+      const curso = element.parentElement;
+      curso.classList.toggle('active');
+    }
+
+    // Verificar status de autenticação ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthStatus();
+    });
+  </script>
+</body>
+</html>

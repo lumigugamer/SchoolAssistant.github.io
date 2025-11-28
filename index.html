@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Assistant</title>
+    <link rel="stylesheet" href="css/inicio.css">
+    <style>
+        /* Estilos para o sistema de autenticação */
+        .auth-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+        
+        .auth-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-login {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+        
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-register {
+            background: white;
+            color: #0033A0;
+        }
+        
+        .btn-register:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        
+        .nav-links {
+            display: none;
+            align-items: center;
+            gap: 20px;
+            margin-left: auto;
+        }
+        
+        .nav-links.active {
+            display: flex;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: red;
+            transform: scale(1.1);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 15px;
+            color: white;
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Modal de login/registro */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            animation: fadeInModal 0.3s ease;
+        }
+        
+        .auth-content {
+            background: #fff;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            animation: popUp 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            background: #f5f5f5;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-tab.active {
+            background: white;
+            color: #0033A0;
+        }
+        
+        .auth-form {
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            border-color: #0033A0;
+            outline: none;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0033A0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #002080;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .auth-switch a {
+            color: #0033A0;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        /* Mensagem de necessidade de login */
+        .login-required {
+            background: #fff9e6;
+            border-left: 4px solid #ffcc00;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 950px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 1s ease;
+        }
+        
+        .login-required h3 {
+            color: #cc9900;
+            margin-top: 0;
+        }
+        
+        .login-required p {
+            margin-bottom: 15px;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: #0033A0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        /* Conteúdo restrito */
+        .restricted-content {
+            opacity: 0.6;
+            filter: blur(2px);
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+        
+        .restricted-content.active {
+            opacity: 1;
+            filter: none;
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="navbar"> 
+        <img src="imgs/SO1.jpg" id="Imagem" alt="Logo">
+        <h1>School Assistant</h1>
+        
+        <!-- Container de autenticação -->
+        <div class="auth-container" id="authContainer">
+            <button class="auth-btn btn-login" id="btnLogin">Entrar</button>
+            <button class="auth-btn btn-register" id="btnRegister">Registrar</button>
+        </div>
+        
+        <!-- Links de navegação (aparecem após login) -->
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Inicial</a>
+            <a href="jornal.html">Jornal</a>
+            <a href="horarios.html">Horários</a>
+            <a href="agendamento.html">Agendamentos de Espaços</a>
+            <a href="cursos.html">Cursos</a>
+            <a href="professores.html">Professores</a>
+            
+            <!-- Menu do usuário -->
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span id="userName">Usuário</span>
+                <button class="logout-btn" id="btnLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Login/Registro -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-content">
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="loginTab">Entrar</div>
+                <div class="auth-tab" id="registerTab">Registrar</div>
+            </div>
+            
+            <div class="auth-form">
+                <!-- Formulário de Login -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">E-mail</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Senha</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Entrar</button>
+                    <div class="auth-switch">
+                        Não tem uma conta? <a id="switchToRegister">Registre-se</a>
+                    </div>
+                </form>
+                
+                <!-- Formulário de Registro -->
+                <form id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="registerName">Nome Completo</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">E-mail</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Senha</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar Senha</label>
+                        <input type="password" id="registerConfirmPassword" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Registrar</button>
+                    <div class="auth-switch">
+                        Já tem uma conta? <a id="switchToLogin">Faça login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteudo">
+        <!-- Mensagem de necessidade de login -->
+        <div class="login-required" id="loginRequired">
+            <h3>Faça login para acessar todos os recursos</h3>
+            <p>Para utilizar todas as funcionalidades do School Assistant, você precisa estar logado em sua conta.</p>
+            
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <span>Acesso ao Jornal escolar</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <span>Consulta de horários</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <span>Agendamento de espaços</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <span>Informações sobre cursos</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <span>Dados dos professores</span>
+                </div>
+            </div>
+            
+            <p><strong>Não tem uma conta?</strong> <a href="#" id="registerFromMessage">Registre-se gratuitamente</a> e comece a usar todas as funcionalidades!</p>
+        </div>
+
+        <div class="descricao">
+            <p>
+                Descrição do Site Educacional — desenvolvido com HTML, CSS e JavaScript para aprimorar a experiência educacional, promovendo organização, acessibilidade e interação entre alunos, professores e a instituição.
+            </p>
+        </div>
+        
+        <div class="todas-container restricted-content" id="mainContent">
+            <div class="todas animar">
+                <h2>Jornal</h2>
+                <p>A aba "Jornal" é dedicada à divulgação de notícias e atualizações relevantes da instituição.</p>
+            </div>
+            <div class="todas animar">
+                <h2>Horários</h2>
+                <p>A seção de "Horários" organiza os cronogramas de aulas de forma clara e acessível.</p>
+            </div>
+            <div class="todas animar">
+                <h2>Agendamentos de Espaços</h2>
+                <p>A funcionalidade de "Agendamentos de Espaços" permite que alunos e professores reservem salas.</p>
+            </div>
+            <div class="todas animar">
+                <h2>Horários dos Professores</h2>
+                <p>Destinada exclusivamente aos docentes, fornece informações detalhadas sobre suas alocações.</p>
+            </div>
+            <div class="todas animar">
+                <h2>Cursos</h2>
+                <p>A seção "Cursos" apresenta todos os programas educacionais oferecidos pela instituição.</p>
+            </div>
+            <div class="todas animar">
+                <h2>Professores</h2>
+                <p>A aba "Professores" destaca o corpo docente, promovendo conexão com a comunidade acadêmica.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão Saiba Mais -->
+    <div id="saiba">
+        <a href="#" id="btnSaibaMais">Saiba mais</a>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalSaibaMais" class="modal">
+        <div class="modal-conteudo">
+            <span class="fechar">&times;</span>
+            <h2>Sobre a School Assistant</h2>
+            <div class="cards-container">
+                <div class="card"><h3>História</h3><p>Fundada em 2025, a School Assistant nasceu da paixão por criar experiências únicas no mundo educacional...</p></div>
+                <div class="card"><h3>Missão</h3><p>Criar ferramentas imersivas e inovadoras que conectem alunos e professores e despertem o aprendizado.</p></div>
+                <div class="card"><h3>Visão</h3><p>Ser referência no mercado educacional como uma desenvolvedora criativa e ousada.</p></div>
+                <div class="card">
+                    <h3>Valores</h3>
+                    <ul>
+                        <li>Criatividade sem limites</li>
+                        <li>Compromisso com a qualidade</li>
+                        <li>Respeito à comunidade educacional</li>
+                        <li>Trabalho em equipe</li>
+                        <li>Inovação constante</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="criadores-grid">
+                <div class="criador-card animar">
+                    <div class="criador-img img-nickolas"></div>
+                    <h4>Nickolas</h4>
+                    <p>Lidera projetos com estratégia e eficiência, garantindo qualidade e resultados.</p>
+                </div>
+                <div class="criador-card animar">
+                    <div class="criador-img img-luis"></div>
+                    <h4>Luis Miguel</h4>
+                    <p>Cria interfaces intuitivas e visualmente impactantes para experiências digitais excepcionais.</p>
+                </div>
+                <div class="criador-card animar">
+                    <div class="criador-img img-yago"></div>
+                    <h4>Yago</h4>
+                    <p>Desenvolve soluções tecnológicas robustas e inovadoras com código de alto desempenho.</p>
+                </div>
+                <div class="criador-card animar">
+                    <div class="criador-img img-heitor"></div>
+                    <h4>Heitor Felix</h4>
+                    <p>Dá vida à identidade visual com criatividade e domínio de cores, tipografia e composição.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <h3>School Assistant</h3>
+                <p>Organização e acessibilidade para a sua instituição de ensino.</p>
+            </div>
+            <div class="footer-right">
+                <p><strong>Contato:</strong> contato@schoolassistant.com</p>
+                <p><strong>Suporte:</strong> suporte@schoolassistant.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 School Assistant - Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script>
+        // Sistema de Autenticação
+        const authModal = document.getElementById("authModal");
+        const btnLogin = document.getElementById("btnLogin");
+        const btnRegister = document.getElementById("btnRegister");
+        const loginTab = document.getElementById("loginTab");
+        const registerTab = document.getElementById("registerTab");
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const switchToRegister = document.getElementById("switchToRegister");
+        const switchToLogin = document.getElementById("switchToLogin");
+        const authContainer = document.getElementById("authContainer");
+        const navLinks = document.getElementById("navLinks");
+        const userMenu = document.getElementById("userMenu");
+        const userName = document.getElementById("userName");
+        const userAvatar = document.getElementById("userAvatar");
+        const btnLogout = document.getElementById("btnLogout");
+        const loginRequired = document.getElementById("loginRequired");
+        const mainContent = document.getElementById("mainContent");
+        const registerFromMessage = document.getElementById("registerFromMessage");
+
+        // Verificar se o usuário já está logado
+        function checkAuthStatus() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                showNavLinks(userData);
+                showMainContent();
+            } else {
+                showAuthButtons();
+                hideMainContent();
+            }
+        }
+
+        // Mostrar botões de autenticação
+        function showAuthButtons() {
+            authContainer.style.display = 'flex';
+            navLinks.style.display = 'none';
+        }
+
+        // Mostrar links de navegação e menu do usuário
+        function showNavLinks(userData) {
+            authContainer.style.display = 'none';
+            navLinks.style.display = 'flex';
+            userName.textContent = userData.name;
+            userAvatar.textContent = userData.name.charAt(0).toUpperCase();
+        }
+
+        // Mostrar conteúdo principal
+        function showMainContent() {
+            loginRequired.style.display = 'none';
+            mainContent.classList.add('active');
+        }
+
+        // Ocultar conteúdo principal
+        function hideMainContent() {
+            loginRequired.style.display = 'block';
+            mainContent.classList.remove('active');
+        }
+
+        // Abrir modal de autenticação
+        function openAuthModal(tab) {
+            authModal.style.display = 'flex';
+            if (tab === 'login') {
+                showLoginForm();
+            } else {
+                showRegisterForm();
+            }
+        }
+
+        // Mostrar formulário de login
+        function showLoginForm() {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+        }
+
+        // Mostrar formulário de registro
+        function showRegisterForm() {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            loginTab.classList.remove('active');
+            registerTab.classList.add('active');
+        }
+
+        // Fechar modal de autenticação
+        function closeAuthModal() {
+            authModal.style.display = 'none';
+        }
+
+        // Processar login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Verificar se o usuário existe
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Salvar usuário atual
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showNavLinks(user);
+                showMainContent();
+                closeAuthModal();
+                loginForm.reset();
+            } else {
+                alert('E-mail ou senha incorretos!');
+            }
+        });
+
+        // Processar registro
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            
+            // Verificar se o usuário já existe
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const userExists = users.some(u => u.email === email);
+            
+            if (userExists) {
+                alert('Este e-mail já está cadastrado!');
+                return;
+            }
+            
+            // Criar novo usuário
+            const newUser = {
+                name: name,
+                email: email,
+                password: password
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            
+            showNavLinks(newUser);
+            showMainContent();
+            closeAuthModal();
+            registerForm.reset();
+            
+            alert('Conta criada com sucesso!');
+        });
+
+        // Fazer logout
+        btnLogout.addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
+            showAuthButtons();
+            hideMainContent();
+        });
+
+        // Event Listeners
+        btnLogin.addEventListener('click', function() {
+            openAuthModal('login');
+        });
+        
+        btnRegister.addEventListener('click', function() {
+            openAuthModal('register');
+        });
+        
+        loginTab.addEventListener('click', function() {
+            showLoginForm();
+        });
+        
+        registerTab.addEventListener('click', function() {
+            showRegisterForm();
+        });
+        
+        switchToRegister.addEventListener('click', function(e) {
+            e.preventDefault();
+            showRegisterForm();
+        });
+        
+        switchToLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginForm();
+        });
+        
+        registerFromMessage.addEventListener('click', function(e) {
+            e.preventDefault();
+            openAuthModal('register');
+        });
+        
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(event) {
+            if (event.target === authModal) {
+                closeAuthModal();
+            }
+        });
+
+        // Modal original
+        const modal = document.getElementById("modalSaibaMais");
+        const btn = document.getElementById("btnSaibaMais");
+        const fechar = document.querySelector(".fechar");
+
+        btn.onclick = function(event) {
+            event.preventDefault();
+            modal.style.display = "flex";
+            modal.classList.add("fadeIn");
+        }
+
+        fechar.onclick = function() {
+            modal.classList.remove("fadeIn");
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Animação suave dos elementos
+        const animados = document.querySelectorAll('.animar');
+        function animarScroll() {
+            animados.forEach(el => {
+                const topo = el.getBoundingClientRect().top;
+                if (topo < window.innerHeight - 100) el.classList.add('aparecer');
+            });
+        }
+        window.addEventListener('scroll', animarScroll);
+        animarScroll();
+
+        // Verificar status de autenticação ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+        });
+    </script>
+
+</body>
+</html>
