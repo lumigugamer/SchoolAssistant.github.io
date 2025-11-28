@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Assistant - Agendamentos</title>
+    <link rel="stylesheet" href="css/agendamento.css">
+    <style>
+        /* Estilos para o sistema de autenticação */
+        .auth-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+        
+        .auth-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-login {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+        
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-register {
+            background: white;
+            color: #0033A0;
+        }
+        
+        .btn-register:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        
+        .nav-links {
+            display: none;
+            align-items: center;
+            gap: 20px;
+            margin-left: auto;
+        }
+        
+        .nav-links.active {
+            display: flex;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: red;
+            transform: scale(1.1);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 15px;
+            color: white;
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Modal de login/registro */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            animation: fadeInModal 0.3s ease;
+        }
+        
+        .auth-content {
+            background: #fff;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            animation: popUp 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            background: #f5f5f5;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-tab.active {
+            background: white;
+            color: #0033A0;
+        }
+        
+        .auth-form {
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            border-color: #0033A0;
+            outline: none;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0033A0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #002080;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .auth-switch a {
+            color: #0033A0;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        /* Mensagem de necessidade de login */
+        .login-required {
+            background: #fff9e6;
+            border-left: 4px solid #ffcc00;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1000px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 1s ease;
+            text-align: center;
+        }
+        
+        .login-required h3 {
+            color: #cc9900;
+            margin-top: 0;
+        }
+        
+        .login-required p {
+            margin-bottom: 15px;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: #0033A0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        /* Conteúdo restrito */
+        .restricted-content {
+            opacity: 0.6;
+            filter: blur(2px);
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+        
+        .restricted-content.active {
+            opacity: 1;
+            filter: none;
+            pointer-events: all;
+        }
+
+        /* Estilos específicos para agendamentos */
+        .agendamentos-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .agendamentos-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .agendamentos-header h1 {
+            color: #0033A0;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .agendamentos-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .agendamentos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .espaco-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid #0033A0;
+        }
+        
+        .espaco-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .espaco-card h3 {
+            color: #0033A0;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .espaco-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .status-disponivel {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .status-ocupado {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-agendar {
+            background: #0033A0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-agendar:hover {
+            background: #002080;
+        }
+        
+        .btn-agendar:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .calendario-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+        }
+        
+        .calendario-section h2 {
+            color: #0033A0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .calendario-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .calendario-dia {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .calendario-dia:hover {
+            background: #e9ecef;
+        }
+        
+        .calendario-dia.ativo {
+            background: #0033A0;
+            color: white;
+        }
+        
+        .calendario-dia.ocupado {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .dias-semana {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #0033A0;
+        }
+        
+        .form-agendamento {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-agendamento h2 {
+            color: #0033A0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group-agendamento {
+            margin-bottom: 20px;
+        }
+        
+        .form-group-agendamento label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group-agendamento input,
+        .form-group-agendamento select,
+        .form-group-agendamento textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border 0.3s ease;
+        }
+        
+        .form-group-agendamento input:focus,
+        .form-group-agendamento select:focus,
+        .form-group-agendamento textarea:focus {
+            border-color: #0033A0;
+            outline: none;
+        }
+        
+        .meus-agendamentos {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 40px;
+        }
+        
+        .meus-agendamentos h2 {
+            color: #0033A0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .agendamento-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0033A0;
+        }
+        
+        .agendamento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .agendamento-espaco {
+            font-weight: 600;
+            color: #0033A0;
+        }
+        
+        .agendamento-data {
+            color: #666;
+        }
+        
+        .btn-cancelar {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .btn-cancelar:hover {
+            background: #c0392b;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendario-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 5px;
+            }
+            
+            .calendario-dia {
+                padding: 10px 5px;
+                font-size: 0.8rem;
+            }
+            
+            .agendamentos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <img src="imgs/SO1.jpg" id="Imagem" alt="Logo"> 
+        <h1>School Assistant</h1>
+        
+        <!-- Container de autenticação -->
+        <div class="auth-container" id="authContainer">
+            <button class="auth-btn btn-login" id="btnLogin">Entrar</button>
+            <button class="auth-btn btn-register" id="btnRegister">Registrar</button>
+        </div>
+        
+        <!-- Links de navegação (aparecem após login) -->
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Inicial</a>
+            <a href="jornal.html">News</a>
+            <a href="horarios.html">Horários</a>
+            <a href="agendamento.html">Agendamentos de Espaços</a>
+            <a href="cursos.html">Cursos</a>
+            <a href="professores.html">Professores</a>
+            
+            <!-- Menu do usuário -->
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span id="userName">Usuário</span>
+                <button class="logout-btn" id="btnLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Login/Registro -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-content">
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="loginTab">Entrar</div>
+                <div class="auth-tab" id="registerTab">Registrar</div>
+            </div>
+            
+            <div class="auth-form">
+                <!-- Formulário de Login -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">E-mail</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Senha</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Entrar</button>
+                    <div class="auth-switch">
+                        Não tem uma conta? <a id="switchToRegister">Registre-se</a>
+                    </div>
+                </form>
+                
+                <!-- Formulário de Registro -->
+                <form id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="registerName">Nome Completo</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">E-mail</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Senha</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar Senha</label>
+                        <input type="password" id="registerConfirmPassword" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Registrar</button>
+                    <div class="auth-switch">
+                        Já tem uma conta? <a id="switchToLogin">Faça login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensagem de necessidade de login -->
+    <div class="login-required" id="loginRequired">
+        <h3>Faça login para acessar o sistema de agendamentos</h3>
+        <p>Para reservar laboratórios e espaços da escola, você precisa estar logado em sua conta de professor.</p>
+        
+        <div class="features-list">
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Agendamento de laboratórios</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Consulta de disponibilidade</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Gestão de seus agendamentos</span>
+            </div>
+        </div>
+        
+        <p><strong>Não tem uma conta?</strong> <a href="#" id="registerFromMessage">Registre-se gratuitamente</a> e tenha acesso ao sistema!</p>
+    </div>
+
+    <div class="agendamentos-container restricted-content" id="mainContent">
+        <div class="agendamentos-header">
+            <h1>Agendamentos de Espaços</h1>
+            <p>Reserve laboratórios e espaços da escola para suas aulas e atividades. Verifique a disponibilidade e faça seu agendamento de forma rápida e fácil.</p>
+        </div>
+
+        <div class="agendamentos-grid">
+            <div class="espaco-card">
+                <h3>Laboratório de Informática</h3>
+                <span class="status-indicator status-disponivel">Disponível</span>
+                <p>Laboratório equipado com 25 computadores, projetor multimídia e software educacional. Capacidade para 30 alunos.</p>
+                <button class="btn-agendar" data-espaco="lab-info">Agendar Laboratório</button>
+            </div>
+            
+            <div class="espaco-card">
+                <h3>Laboratório de Manutenção</h3>
+                <span class="status-indicator status-disponivel">Disponível</span>
+                <p>Espaço com bancadas, ferramentas e equipamentos para práticas de manutenção e reparos. Capacidade para 20 alunos.</p>
+                <button class="btn-agendar" data-espaco="lab-manutencao">Agendar Laboratório</button>
+            </div>
+            
+            <div class="espaco-card">
+                <h3>Laboratório de Robótica</h3>
+                <span class="status-indicator status-ocupado">Ocupado</span>
+                <p>Ambiente com kits de robótica, impressora 3D e espaço para prototipagem. Capacidade para 15 alunos.</p>
+                <button class="btn-agendar" data-espaco="lab-robotica" disabled>Indisponível</button>
+            </div>
+            
+            <div class="espaco-card">
+                <h3>Sala Multimídia</h3>
+                <span class="status-indicator status-disponivel">Disponível</span>
+                <p>Sala com equipamentos audiovisuais, telão e sistema de som para apresentações. Capacidade para 40 alunos.</p>
+                <button class="btn-agendar" data-espaco="sala-multimidia">Agendar Sala</button>
+            </div>
+            
+            <div class="espaco-card">
+                <h3>Biblioteca</h3>
+                <span class="status-indicator status-disponivel">Disponível</span>
+                <p>Espaço silencioso para estudos e pesquisas com acervo diversificado. Capacidade para 25 alunos.</p>
+                <button class="btn-agendar" data-espaco="biblioteca">Agendar Biblioteca</button>
+            </div>
+            
+            <div class="espaco-card">
+                <h3>Auditório</h3>
+                <span class="status-indicator status-ocupado">Ocupado</span>
+                <p>Espaço para eventos, palestras e apresentações com 100 lugares e equipamento de som profissional.</p>
+                <button class="btn-agendar" data-espaco="auditorio" disabled>Indisponível</button>
+            </div>
+        </div>
+
+        <div class="calendario-section">
+            <h2>Calendário de Disponibilidade</h2>
+            <div class="dias-semana">
+                <div>Dom</div>
+                <div>Seg</div>
+                <div>Ter</div>
+                <div>Qua</div>
+                <div>Qui</div>
+                <div>Sex</div>
+                <div>Sáb</div>
+            </div>
+            <div class="calendario-grid" id="calendario">
+                <!-- Os dias do calendário serão gerados via JavaScript -->
+            </div>
+        </div>
+
+        <div class="form-agendamento">
+            <h2>Fazer Agendamento</h2>
+            <form id="formAgendamento">
+                <div class="form-row">
+                    <div class="form-group-agendamento">
+                        <label for="espaco">Espaço/Laboratório</label>
+                        <select id="espaco" required>
+                            <option value="">Selecione um espaço</option>
+                            <option value="lab-info">Laboratório de Informática</option>
+                            <option value="lab-manutencao">Laboratório de Manutenção</option>
+                            <option value="lab-robotica">Laboratório de Robótica</option>
+                            <option value="sala-multimidia">Sala Multimídia</option>
+                            <option value="biblioteca">Biblioteca</option>
+                            <option value="auditorio">Auditório</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group-agendamento">
+                        <label for="data">Data do Agendamento</label>
+                        <input type="date" id="data" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group-agendamento">
+                        <label for="horario-inicio">Horário de Início</label>
+                        <select id="horario-inicio" required>
+                            <option value="">Selecione</option>
+                            <option value="07:00">07:00</option>
+                            <option value="08:00">08:00</option>
+                            <option value="09:00">09:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                            <option value="18:00">18:00</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group-agendamento">
+                        <label for="horario-fim">Horário de Término</label>
+                        <select id="horario-fim" required>
+                            <option value="">Selecione</option>
+                            <option value="08:00">08:00</option>
+                            <option value="09:00">09:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="12:00">12:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                            <option value="18:00">18:00</option>
+                            <option value="19:00">19:00</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group-agendamento">
+                    <label for="turma">Turma/Disciplina</label>
+                    <input type="text" id="turma" placeholder="Ex: 2º Ano A - Matemática" required>
+                </div>
+                
+                <div class="form-group-agendamento">
+                    <label for="observacoes">Observações</label>
+                    <textarea id="observacoes" rows="3" placeholder="Informações adicionais sobre o uso do espaço..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Confirmar Agendamento</button>
+            </form>
+        </div>
+
+        <div class="meus-agendamentos">
+            <h2>Meus Agendamentos</h2>
+            <div id="lista-agendamentos">
+                <!-- Os agendamentos serão carregados via JavaScript -->
+                <p class="sem-agendamentos">Você ainda não fez nenhum agendamento.</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <h3>School Assistant</h3>
+                <p>Organização e acessibilidade para a sua instituição de ensino.</p>
+            </div>
+            <div class="footer-right">
+                <p><strong>Contato:</strong> contato@schoolassistant.com</p>
+                <p><strong>Suporte:</strong> suporte@schoolassistant.com</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2025 School Assistant - Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script>
+        // Sistema de Autenticação
+        const authModal = document.getElementById("authModal");
+        const btnLogin = document.getElementById("btnLogin");
+        const btnRegister = document.getElementById("btnRegister");
+        const loginTab = document.getElementById("loginTab");
+        const registerTab = document.getElementById("registerTab");
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const switchToRegister = document.getElementById("switchToRegister");
+        const switchToLogin = document.getElementById("switchToLogin");
+        const authContainer = document.getElementById("authContainer");
+        const navLinks = document.getElementById("navLinks");
+        const userMenu = document.getElementById("userMenu");
+        const userName = document.getElementById("userName");
+        const userAvatar = document.getElementById("userAvatar");
+        const btnLogout = document.getElementById("btnLogout");
+        const loginRequired = document.getElementById("loginRequired");
+        const mainContent = document.getElementById("mainContent");
+        const registerFromMessage = document.getElementById("registerFromMessage");
+
+        // Verificar se o usuário já está logado
+        function checkAuthStatus() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                showNavLinks(userData);
+                showContent();
+            } else {
+                showAuthButtons();
+                hideContent();
+            }
+        }
+
+        // Mostrar botões de autenticação
+        function showAuthButtons() {
+            authContainer.style.display = 'flex';
+            navLinks.style.display = 'none';
+        }
+
+        // Mostrar links de navegação e menu do usuário
+        function showNavLinks(userData) {
+            authContainer.style.display = 'none';
+            navLinks.style.display = 'flex';
+            userName.textContent = userData.name;
+            userAvatar.textContent = userData.name.charAt(0).toUpperCase();
+        }
+
+        // Mostrar conteúdo principal
+        function showContent() {
+            loginRequired.style.display = 'none';
+            mainContent.classList.add('active');
+            carregarAgendamentos();
+            inicializarCalendario();
+        }
+
+        // Ocultar conteúdo principal
+        function hideContent() {
+            loginRequired.style.display = 'block';
+            mainContent.classList.remove('active');
+        }
+
+        // Abrir modal de autenticação
+        function openAuthModal(tab) {
+            authModal.style.display = 'flex';
+            if (tab === 'login') {
+                showLoginForm();
+            } else {
+                showRegisterForm();
+            }
+        }
+
+        // Mostrar formulário de login
+        function showLoginForm() {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+        }
+
+        // Mostrar formulário de registro
+        function showRegisterForm() {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            loginTab.classList.remove('active');
+            registerTab.classList.add('active');
+        }
+
+        // Fechar modal de autenticação
+        function closeAuthModal() {
+            authModal.style.display = 'none';
+        }
+
+        // Processar login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Verificar se o usuário existe
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Salvar usuário atual
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showNavLinks(user);
+                showContent();
+                closeAuthModal();
+                loginForm.reset();
+            } else {
+                alert('E-mail ou senha incorretos!');
+            }
+        });
+
+        // Processar registro
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            
+            // Verificar se o usuário já existe
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const userExists = users.some(u => u.email === email);
+            
+            if (userExists) {
+                alert('Este e-mail já está cadastrado!');
+                return;
+            }
+            
+            // Criar novo usuário
+            const newUser = {
+                name: name,
+                email: email,
+                password: password,
+                tipo: 'professor' // Definindo como professor
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            
+            showNavLinks(newUser);
+            showContent();
+            closeAuthModal();
+            registerForm.reset();
+            
+            alert('Conta criada com sucesso!');
+        });
+
+        // Fazer logout
+        btnLogout.addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
+            showAuthButtons();
+            hideContent();
+        });
+
+        // Event Listeners para autenticação
+        btnLogin.addEventListener('click', function() {
+            openAuthModal('login');
+        });
+        
+        btnRegister.addEventListener('click', function() {
+            openAuthModal('register');
+        });
+        
+        loginTab.addEventListener('click', function() {
+            showLoginForm();
+        });
+        
+        registerTab.addEventListener('click', function() {
+            showRegisterForm();
+        });
+        
+        switchToRegister.addEventListener('click', function(e) {
+            e.preventDefault();
+            showRegisterForm();
+        });
+        
+        switchToLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginForm();
+        });
+        
+        registerFromMessage.addEventListener('click', function(e) {
+            e.preventDefault();
+            openAuthModal('register');
+        });
+        
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(event) {
+            if (event.target === authModal) {
+                closeAuthModal();
+            }
+        });
+
+        // Sistema de Agendamentos
+        function inicializarCalendario() {
+            const calendario = document.getElementById('calendario');
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = hoje.getMonth();
+            
+            // Obter o primeiro dia do mês
+            const primeiroDia = new Date(ano, mes, 1);
+            // Obter o último dia do mês
+            const ultimoDia = new Date(ano, mes + 1, 0);
+            
+            // Limpar calendário
+            calendario.innerHTML = '';
+            
+            // Adicionar dias vazios para o primeiro dia cair no dia correto
+            for (let i = 0; i < primeiroDia.getDay(); i++) {
+                const diaVazio = document.createElement('div');
+                calendario.appendChild(diaVazio);
+            }
+            
+            // Adicionar os dias do mês
+            for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
+                const diaElemento = document.createElement('div');
+                diaElemento.className = 'calendario-dia';
+                diaElemento.textContent = dia;
+                
+                // Marcar o dia atual
+                if (dia === hoje.getDate() && mes === hoje.getMonth()) {
+                    diaElemento.classList.add('ativo');
+                }
+                
+                // Simular alguns dias ocupados (apenas para demonstração)
+                if (dia % 5 === 0 || dia % 7 === 0) {
+                    diaElemento.classList.add('ocupado');
+                }
+                
+                calendario.appendChild(diaElemento);
+            }
+        }
+        
+        function carregarAgendamentos() {
+            const listaAgendamentos = document.getElementById('lista-agendamentos');
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!user) return;
+            
+            // Obter agendamentos do localStorage
+            const agendamentos = JSON.parse(localStorage.getItem('agendamentos') || '[]');
+            const meusAgendamentos = agendamentos.filter(a => a.professor === user.email);
+            
+            if (meusAgendamentos.length === 0) {
+                listaAgendamentos.innerHTML = '<p class="sem-agendamentos">Você ainda não fez nenhum agendamento.</p>';
+                return;
+            }
+            
+            listaAgendamentos.innerHTML = '';
+            
+            meusAgendamentos.forEach(agendamento => {
+                const agendamentoItem = document.createElement('div');
+                agendamentoItem.className = 'agendamento-item';
+                
+                const nomeEspaco = {
+                    'lab-info': 'Laboratório de Informática',
+                    'lab-manutencao': 'Laboratório de Manutenção',
+                    'lab-robotica': 'Laboratório de Robótica',
+                    'sala-multimidia': 'Sala Multimídia',
+                    'biblioteca': 'Biblioteca',
+                    'auditorio': 'Auditório'
+                }[agendamento.espaco];
+                
+                agendamentoItem.innerHTML = `
+                    <div class="agendamento-header">
+                        <span class="agendamento-espaco">${nomeEspaco}</span>
+                        <button class="btn-cancelar" data-id="${agendamento.id}">Cancelar</button>
+                    </div>
+                    <div class="agendamento-data">
+                        <strong>Data:</strong> ${agendamento.data} | 
+                        <strong>Horário:</strong> ${agendamento.horarioInicio} - ${agendamento.horarioFim}
+                    </div>
+                    <div><strong>Turma:</strong> ${agendamento.turma}</div>
+                    ${agendamento.observacoes ? `<div><strong>Observações:</strong> ${agendamento.observacoes}</div>` : ''}
+                `;
+                
+                listaAgendamentos.appendChild(agendamentoItem);
+            });
+            
+            // Adicionar event listeners para os botões de cancelar
+            document.querySelectorAll('.btn-cancelar').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    cancelarAgendamento(id);
+                });
+            });
+        }
+        
+        function cancelarAgendamento(id) {
+            if (!confirm('Tem certeza que deseja cancelar este agendamento?')) {
+                return;
+            }
+            
+            const agendamentos = JSON.parse(localStorage.getItem('agendamentos') || '[]');
+            const agendamentosAtualizados = agendamentos.filter(a => a.id !== id);
+            
+            localStorage.setItem('agendamentos', JSON.stringify(agendamentosAtualizados));
+            carregarAgendamentos();
+            alert('Agendamento cancelado com sucesso!');
+        }
+        
+        // Formulário de agendamento
+        document.getElementById('formAgendamento').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                alert('Você precisa estar logado para fazer um agendamento.');
+                return;
+            }
+            
+            const espaco = document.getElementById('espaco').value;
+            const data = document.getElementById('data').value;
+            const horarioInicio = document.getElementById('horario-inicio').value;
+            const horarioFim = document.getElementById('horario-fim').value;
+            const turma = document.getElementById('turma').value;
+            const observacoes = document.getElementById('observacoes').value;
+            
+            // Validar horários
+            if (horarioInicio >= horarioFim) {
+                alert('O horário de término deve ser após o horário de início.');
+                return;
+            }
+            
+            // Verificar conflitos de agendamento
+            const agendamentos = JSON.parse(localStorage.getItem('agendamentos') || '[]');
+            const conflito = agendamentos.find(a => 
+                a.espaco === espaco && 
+                a.data === data && 
+                ((horarioInicio >= a.horarioInicio && horarioInicio < a.horarioFim) ||
+                 (horarioFim > a.horarioInicio && horarioFim <= a.horarioFim) ||
+                 (horarioInicio <= a.horarioInicio && horarioFim >= a.horarioFim))
+            );
+            
+            if (conflito) {
+                alert('Este espaço já está reservado para este horário. Por favor, escolha outro horário.');
+                return;
+            }
+            
+            // Criar novo agendamento
+            const novoAgendamento = {
+                id: Date.now().toString(),
+                professor: user.email,
+                espaco: espaco,
+                data: data,
+                horarioInicio: horarioInicio,
+                horarioFim: horarioFim,
+                turma: turma,
+                observacoes: observacoes,
+                dataCriacao: new Date().toISOString()
+            };
+            
+            agendamentos.push(novoAgendamento);
+            localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+            
+            // Limpar formulário
+            document.getElementById('formAgendamento').reset();
+            
+            // Atualizar lista de agendamentos
+            carregarAgendamentos();
+            
+            alert('Agendamento realizado com sucesso!');
+        });
+        
+        // Botões de agendamento rápido
+        document.querySelectorAll('.btn-agendar').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.disabled) return;
+                
+                const espaco = this.getAttribute('data-espaco');
+                document.getElementById('espaco').value = espaco;
+                
+                // Rolar até o formulário
+                document.getElementById('formAgendamento').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Verificar status de autenticação ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            
+            // Definir data mínima como hoje
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('data').min = hoje;
+        });
+    </script>
+</body>
+</html>

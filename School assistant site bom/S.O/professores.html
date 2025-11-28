@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Assistant - Professores</title>
+    <link rel="stylesheet" href="css/jornal.css">
+    <style>
+        /* Estilos para o sistema de autenticação */
+        .auth-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+        
+        .auth-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-login {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+        
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-register {
+            background: white;
+            color: #0033A0;
+        }
+        
+        .btn-register:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        
+        .nav-links {
+            display: none;
+            align-items: center;
+            gap: 20px;
+            margin-left: auto;
+        }
+        
+        .nav-links.active {
+            display: flex;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: red;
+            transform: scale(1.1);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 15px;
+            color: white;
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Modal de login/registro */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            animation: fadeInModal 0.3s ease;
+        }
+        
+        .auth-content {
+            background: #fff;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            animation: popUp 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            background: #f5f5f5;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-tab.active {
+            background: white;
+            color: #0033A0;
+        }
+        
+        .auth-form {
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            border-color: #0033A0;
+            outline: none;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0033A0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #002080;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .auth-switch a {
+            color: #0033A0;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        /* Mensagem de necessidade de login */
+        .login-required {
+            background: #fff9e6;
+            border-left: 4px solid #ffcc00;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1000px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 1s ease;
+            text-align: center;
+        }
+        
+        .login-required h3 {
+            color: #cc9900;
+            margin-top: 0;
+        }
+        
+        .login-required p {
+            margin-bottom: 15px;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: #0033A0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        /* Conteúdo restrito */
+        .restricted-content {
+            opacity: 0.6;
+            filter: blur(2px);
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+        
+        .restricted-content.active {
+            opacity: 1;
+            filter: none;
+            pointer-events: all;
+        }
+
+        /* Estilos específicos para professores */
+        .professores-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .professores-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .professores-header h1 {
+            color: #0033A0;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .professores-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .filtros-professores {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .filtro-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #0033A0;
+            border-radius: 20px;
+            color: #0033A0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .filtro-btn:hover, .filtro-btn.active {
+            background: #0033A0;
+            color: white;
+        }
+        
+        .professores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .professor-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid #0033A0;
+            text-align: center;
+        }
+        
+        .professor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .professor-foto {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            border: 3px solid #0033A0;
+        }
+        
+        .professor-nome {
+            color: #0033A0;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+        
+        .professor-idade {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .professor-info {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .info-item {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: flex-start;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #333;
+            min-width: 100px;
+        }
+        
+        .info-value {
+            color: #666;
+            flex: 1;
+        }
+        
+        .cursos-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        
+        .curso-tag {
+            background: #e3f2fd;
+            color: #0033A0;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .curso-tag.informatica {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .curso-tag.seguranca {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .curso-tag.agropecuaria {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .curso-tag.nutricao {
+            background: #e0f2f1;
+            color: #00695c;
+        }
+
+        .stats-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 40px;
+        }
+        
+        .stats-container h2 {
+            color: #0033A0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0033A0;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .professores-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filtros-professores {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .info-item {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <img src="imgs/SO1.jpg" id="Imagem" alt="Logo"> 
+        <h1>School Assistant</h1>
+        
+        <!-- Container de autenticação -->
+        <div class="auth-container" id="authContainer">
+            <button class="auth-btn btn-login" id="btnLogin">Entrar</button>
+            <button class="auth-btn btn-register" id="btnRegister">Registrar</button>
+        </div>
+        
+        <!-- Links de navegação (aparecem após login) -->
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Inicial</a>
+            <a href="jornal.html">News</a>
+            <a href="horarios.html">Horários</a>
+            <a href="agendamento.html">Agendamentos de Espaços</a>
+            <a href="cursos.html">Cursos</a>
+            <a href="professores.html">Professores</a>
+            
+            <!-- Menu do usuário -->
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span id="userName">Usuário</span>
+                <button class="logout-btn" id="btnLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Login/Registro -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-content">
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="loginTab">Entrar</div>
+                <div class="auth-tab" id="registerTab">Registrar</div>
+            </div>
+            
+            <div class="auth-form">
+                <!-- Formulário de Login -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">E-mail</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Senha</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Entrar</button>
+                    <div class="auth-switch">
+                        Não tem uma conta? <a id="switchToRegister">Registre-se</a>
+                    </div>
+                </form>
+                
+                <!-- Formulário de Registro -->
+                <form id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="registerName">Nome Completo</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">E-mail</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Senha</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar Senha</label>
+                        <input type="password" id="registerConfirmPassword" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Registrar</button>
+                    <div class="auth-switch">
+                        Já tem uma conta? <a id="switchToLogin">Faça login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensagem de necessidade de login -->
+    <div class="login-required" id="loginRequired">
+        <h3>Faça login para acessar informações dos professores</h3>
+        <p>Para visualizar o corpo docente completo da escola, você precisa estar logado em sua conta.</p>
+        
+        <div class="features-list">
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Perfis completos dos professores</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Informações de formação</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Disciplinas e cursos ministrados</span>
+            </div>
+        </div>
+        
+        <p><strong>Não tem uma conta?</strong> <a href="#" id="registerFromMessage">Registre-se gratuitamente</a> e tenha acesso completo!</p>
+    </div>
+
+    <div class="professores-container restricted-content" id="mainContent">
+        <div class="professores-header">
+            <h1>Corpo Docente</h1>
+            <p>Conheça nossa equipe de professores qualificados e dedicados ao ensino de qualidade.</p>
+        </div>
+
+        <div class="filtros-professores">
+            <button class="filtro-btn active" data-curso="todos">Todos</button>
+            <button class="filtro-btn" data-curso="informatica">Informática</button>
+            <button class="filtro-btn" data-curso="seguranca">Segurança</button>
+            <button class="filtro-btn" data-curso="agropecuaria">Agropecuária</button>
+            <button class="filtro-btn" data-curso="nutricao">Nutrição</button>
+        </div>
+
+        <div class="professores-grid" id="professoresGrid">
+            <!-- Cards dos professores serão gerados via JavaScript -->
+        </div>
+
+        <div class="stats-container">
+            <h2>Nossa Equipe em Números</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">Professores</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Anos de Experiência</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Cursos Oferecidos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Aprovação dos Alunos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <h3>School Assistant</h3>
+                <p>Organização e acessibilidade para a sua instituição de ensino.</p>
+            </div>
+            <div class="footer-right">
+                <p><strong>Contato:</strong> contato@schoolassistant.com</p>
+                <p><strong>Suporte:</strong> suporte@schoolassistant.com</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2025 School Assistant - Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script>
+        // Sistema de Autenticação
+        const authModal = document.getElementById("authModal");
+        const btnLogin = document.getElementById("btnLogin");
+        const btnRegister = document.getElementById("btnRegister");
+        const loginTab = document.getElementById("loginTab");
+        const registerTab = document.getElementById("registerTab");
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const switchToRegister = document.getElementById("switchToRegister");
+        const switchToLogin = document.getElementById("switchToLogin");
+        const authContainer = document.getElementById("authContainer");
+        const navLinks = document.getElementById("navLinks");
+        const userMenu = document.getElementById("userMenu");
+        const userName = document.getElementById("userName");
+        const userAvatar = document.getElementById("userAvatar");
+        const btnLogout = document.getElementById("btnLogout");
+        const loginRequired = document.getElementById("loginRequired");
+        const mainContent = document.getElementById("mainContent");
+        const registerFromMessage = document.getElementById("registerFromMessage");
+
+        // Verificar se o usuário já está logado
+        function checkAuthStatus() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                showNavLinks(userData);
+                showContent();
+            } else {
+                showAuthButtons();
+                hideContent();
+            }
+        }
+
+        // Mostrar botões de autenticação
+        function showAuthButtons() {
+            authContainer.style.display = 'flex';
+            navLinks.style.display = 'none';
+        }
+
+        // Mostrar links de navegação e menu do usuário
+        function showNavLinks(userData) {
+            authContainer.style.display = 'none';
+            navLinks.style.display = 'flex';
+            userName.textContent = userData.name;
+            userAvatar.textContent = userData.name.charAt(0).toUpperCase();
+        }
+
+        // Mostrar conteúdo principal
+        function showContent() {
+            loginRequired.style.display = 'none';
+            mainContent.classList.add('active');
+            carregarProfessores();
+        }
+
+        // Ocultar conteúdo principal
+        function hideContent() {
+            loginRequired.style.display = 'block';
+            mainContent.classList.remove('active');
+        }
+
+        // Abrir modal de autenticação
+        function openAuthModal(tab) {
+            authModal.style.display = 'flex';
+            if (tab === 'login') {
+                showLoginForm();
+            } else {
+                showRegisterForm();
+            }
+        }
+
+        // Mostrar formulário de login
+        function showLoginForm() {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+        }
+
+        // Mostrar formulário de registro
+        function showRegisterForm() {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            loginTab.classList.remove('active');
+            registerTab.classList.add('active');
+        }
+
+        // Fechar modal de autenticação
+        function closeAuthModal() {
+            authModal.style.display = 'none';
+        }
+
+        // Processar login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Verificar se o usuário existe
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Salvar usuário atual
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showNavLinks(user);
+                showContent();
+                closeAuthModal();
+                loginForm.reset();
+            } else {
+                alert('E-mail ou senha incorretos!');
+            }
+        });
+
+        // Processar registro
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            
+            // Verificar se o usuário já existe
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const userExists = users.some(u => u.email === email);
+            
+            if (userExists) {
+                alert('Este e-mail já está cadastrado!');
+                return;
+            }
+            
+            // Criar novo usuário
+            const newUser = {
+                name: name,
+                email: email,
+                password: password
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            
+            showNavLinks(newUser);
+            showContent();
+            closeAuthModal();
+            registerForm.reset();
+            
+            alert('Conta criada com sucesso!');
+        });
+
+        // Fazer logout
+        btnLogout.addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
+            showAuthButtons();
+            hideContent();
+        });
+
+        // Event Listeners para autenticação
+        btnLogin.addEventListener('click', function() {
+            openAuthModal('login');
+        });
+        
+        btnRegister.addEventListener('click', function() {
+            openAuthModal('register');
+        });
+        
+        loginTab.addEventListener('click', function() {
+            showLoginForm();
+        });
+        
+        registerTab.addEventListener('click', function() {
+            showRegisterForm();
+        });
+        
+        switchToRegister.addEventListener('click', function(e) {
+            e.preventDefault();
+            showRegisterForm();
+        });
+        
+        switchToLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginForm();
+        });
+        
+        registerFromMessage.addEventListener('click', function(e) {
+            e.preventDefault();
+            openAuthModal('register');
+        });
+        
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(event) {
+            if (event.target === authModal) {
+                closeAuthModal();
+            }
+        });
+
+        // Sistema de Professores
+        const professores = [
+            {
+                id: 1,
+                nome: "Carlos Silva",
+                idade: 42,
+                formacao: "Mestre em Ciência da Computação",
+                materia: "Programação e Banco de Dados",
+                turnos: ["Manhã", "Noite"],
+                cursos: ["informatica"],
+                foto: "imgs/professor1.jpg"
+            },
+            {
+                id: 2,
+                nome: "Ana Santos",
+                idade: 38,
+                formacao: "Doutora em Nutrição Clínica",
+                materia: "Nutrição e Dietética",
+                turnos: ["Tarde"],
+                cursos: ["nutricao"],
+                foto: "imgs/professora1.jpg"
+            },
+            {
+                id: 3,
+                nome: "Roberto Almeida",
+                idade: 45,
+                formacao: "Especialista em Segurança do Trabalho",
+                materia: "Segurança Industrial",
+                turnos: ["Noite"],
+                cursos: ["seguranca"],
+                foto: "imgs/professor2.jpg"
+            },
+            {
+                id: 4,
+                nome: "Maria Oliveira",
+                idade: 35,
+                formacao: "Mestre em Agronomia",
+                materia: "Agricultura Sustentável",
+                turnos: ["Manhã", "Tarde"],
+                cursos: ["agropecuaria"],
+                foto: "imgs/professora2.jpg"
+            },
+            {
+                id: 5,
+                nome: "João Pereira",
+                idade: 50,
+                formacao: "Doutor em Zootecnia",
+                materia: "Produção Animal",
+                turnos: ["Manhã"],
+                cursos: ["agropecuaria"],
+                foto: "imgs/professor3.jpg"
+            },
+            {
+                id: 6,
+                nome: "Fernanda Costa",
+                idade: 33,
+                formacao: "Especialista em Redes de Computadores",
+                materia: "Redes e Infraestrutura",
+                turnos: ["Tarde", "Noite"],
+                cursos: ["informatica"],
+                foto: "imgs/professora3.jpg"
+            },
+            {
+                id: 7,
+                nome: "Ricardo Souza",
+                idade: 41,
+                formacao: "Mestre em Segurança Pública",
+                materia: "Segurança Patrimonial",
+                turnos: ["Noite"],
+                cursos: ["seguranca"],
+                foto: "imgs/professor4.jpg"
+            },
+            {
+                id: 8,
+                nome: "Patrícia Lima",
+                idade: 39,
+                formacao: "Doutora em Ciência dos Alimentos",
+                materia: "Tecnologia de Alimentos",
+                turnos: ["Manhã"],
+                cursos: ["nutricao"],
+                foto: "imgs/professora4.jpg"
+            }
+        ];
+
+        function carregarProfessores(filtro = 'todos') {
+            const professoresGrid = document.getElementById('professoresGrid');
+            professoresGrid.innerHTML = '';
+
+            const professoresFiltrados = filtro === 'todos' 
+                ? professores 
+                : professores.filter(p => p.cursos.includes(filtro));
+
+            if (professoresFiltrados.length === 0) {
+                professoresGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #666;">Nenhum professor encontrado para este curso.</p>';
+                return;
+            }
+
+            professoresFiltrados.forEach(professor => {
+                const professorCard = document.createElement('div');
+                professorCard.className = 'professor-card';
+                
+                // Usar imagem placeholder se não tiver foto
+                const foto = professor.foto || 'https://via.placeholder.com/120x120/0033A0/FFFFFF?text=' + professor.nome.charAt(0);
+                
+                professorCard.innerHTML = `
+                    <img src="${foto}" alt="${professor.nome}" class="professor-foto" onerror="this.src='https://via.placeholder.com/120x120/0033A0/FFFFFF?text=${professor.nome.charAt(0)}'">
+                    <h3 class="professor-nome">${professor.nome}</h3>
+                    <p class="professor-idade">${professor.idade} anos</p>
+                    
+                    <div class="professor-info">
+                        <div class="info-item">
+                            <span class="info-label">Formação:</span>
+                            <span class="info-value">${professor.formacao}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Matéria:</span>
+                            <span class="info-value">${professor.materia}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Turnos:</span>
+                            <span class="info-value">${professor.turnos.join(', ')}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="cursos-tags">
+                        ${professor.cursos.map(curso => 
+                            `<span class="curso-tag ${curso}">${getCursoNome(curso)}</span>`
+                        ).join('')}
+                    </div>
+                `;
+                
+                professoresGrid.appendChild(professorCard);
+            });
+        }
+
+        function getCursoNome(curso) {
+            const cursos = {
+                'informatica': 'Informática',
+                'seguranca': 'Segurança',
+                'agropecuaria': 'Agropecuária',
+                'nutricao': 'Nutrição'
+            };
+            return cursos[curso] || curso;
+        }
+
+        // Filtros por curso
+        document.querySelectorAll('.filtro-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove a classe active de todos os botões
+                document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+                // Adiciona a classe active ao botão clicado
+                this.classList.add('active');
+                
+                const curso = this.getAttribute('data-curso');
+                carregarProfessores(curso);
+            });
+        });
+
+        // Verificar status de autenticação ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+        });
+    </script>
+</body>
+</html>
